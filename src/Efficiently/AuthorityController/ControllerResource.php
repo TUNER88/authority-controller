@@ -79,7 +79,11 @@ class ControllerResource
 
     public function loadResource()
     {
-        if ($this->loadedInstance()) {
+        $modelBindingKey = isset($this->options['modelBindingKey']) ? $this->options['modelBindingKey'] : null;
+        
+        if($modelBindingKey && isset($this->params[$this->options['modelBindingKey']])){
+            $this->setResourceInstance($this->params[$modelBindingKey]);
+        } else if ($this->loadedInstance()) {
             if (! $this->getResourceInstance()) {
                 $this->setResourceInstance($this->loadResourceInstance());
             }
@@ -89,7 +93,6 @@ class ControllerResource
                 $this->setCollectionInstance($this->loadCollection());
             }
         }
-
     }
 
     public function authorizeResource()
@@ -114,7 +117,19 @@ class ControllerResource
 
     protected function loadedInstance()
     {
-        return $this->isParent() || $this->isMemberAction();
+        return $this->isParent() || $this->isMemberAction() || $this->modelBindingEnabled();
+    }
+    
+    protected function modelBindingEnabled() {
+        $modelBindingKey = isset($this->options['modelBindingKey']) ? $this->options['modelBindingKey'] : null;
+        
+        if (!$modelBindingKey) {
+            return false;
+        }
+        
+        $model = isset($this->params[$modelBindingKey]) ? $this->params[$modelBindingKey] : null;
+        
+        return $model != null;
     }
 
     protected function loadedCollection()

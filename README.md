@@ -1,3 +1,17 @@
+# Fork notes:
+
+added support for using [Laravel Route Model Binding](http://laravel.com/docs/5.0/routing#route-model-binding) 
+
+```php
+// app/http/Controllers/UserController.php
+
+public function __construct()
+{
+    // set your binding key
+    $this->loadAndAuthorizeResource(['modelBindingKey' => 'users']);
+}
+```
+
 AuthorityController [![Build Status](https://travis-ci.org/efficiently/authority-controller.png?branch=2.0)](http://travis-ci.org/efficiently/authority-controller)
 ===================
 
